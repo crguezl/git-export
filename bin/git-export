@@ -1,0 +1,35 @@
+#!/usr/bin/env perl 
+use warnings;
+use strict;
+use Git::Export;
+
+git_export(@ARGV);
+
+__END__
+# Below is stub documentation for your module. You'd better edit it!
+
+=head1 NAME
+
+git-export - git equivalent to 'svn export'
+
+=head1 SYNOPSIS
+
+  $ git-export git@github.com:crguezl/sinatra-up-and-running.git
+
+  $ git export git@github.com:crguezl/sinatra-up-and-running.git
+
+
+=head1 AUTHOR
+
+Casiano Rodriguez-Leon, E<lt>casiano@ull.es<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2012 by casiano
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.12.3 or,
+at your option, any later version of Perl 5 you may have available.
+
+
+=cut
