@@ -1,5 +1,4 @@
-1.- Support revisions
-2.- Support paths
+1.- Support paths
 
 svn export: Create an unversioned copy of a tree.
 usage: 1. export [-r REV] URL[@PEGREV] [PATH]

@@ -1,34 +1,52 @@
 #!/usr/bin/env perl 
 use warnings;
 use strict;
-use Git::Export;
 use Getopt::Long;
 
 use File::Basename;
 use File::Path qw{remove_tree};
+use Cwd;
+use File::Copy::Recursive qw{rmove}; 
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my $revision = '';
+my $VERBOSE  = 0;
 Getopt::Long::Configure('no_ignore_case');
-my $result = GetOptions('revision=s', \$revision,);
+my $result = GetOptions('revision=s', \$revision,'verbose', \$VERBOSE);
 
   my $url = pop or die("Usage:\n  $0 repository\n");
+  my $path = '';
+  ($url, $path) = $url =~ /^(.*\.git)(.*)/;
+  die "Usage:\n  $0 repository\n" unless $url;
   my $basename = basename($url, '.git');
   die "Directory $basename already exists. Remove it first" if -d  $basename;
 
   my $outclone = `git clone @_ $url 2>&1`;
+  warn "Cloning 'clone @_ $url 2>&1': $outclone" if $VERBOSE;
   die "Errors while cloning $url: $!" if $?;
 
-  die "Can't create directory $basename" unless -d  $basename;
-  chdir($basename) or die "Can't change to dir $basename";
+  if ($path) {
+    my $outrmove = rmove("$basename/$path", getcwd());
 
-  if ($revision) {
-    my $outcheckout  =  `git checkout $revision 2>&1`;
-    die "Errors while checking out revision  $revision: $!" if $?;
+    warn "Moving '$basename/$path' to ".getcwd().": $outrmove moved" if $VERBOSE;
+
+    remove_tree($basename) or die "Can't remove $basename directory";
   }
+  else {
+    die "Something failed while cloning. No directory $basename" unless -d  $basename;
+    chdir($basename) or die "Can't change to dir $basename";
 
-  remove_tree('.git') or die "Can't remove .git directory";
+    if ($revision) {
+      my $outcheckout  =  `git checkout $revision 2>&1`;
+
+      warn "Cheking out version '$revision': $outcheckout" if $VERBOSE;
+
+      die "Errors while checking out revision  $revision: $!" if $?;
+    }
+
+    remove_tree('.git') or die "Can't remove .git directory";
+  }
 
 
 __END__
@@ -41,19 +59,28 @@ git-export - git equivalent to 'svn export'
 
   $ git-export git@github.com:crguezl/sinatra-up-and-running.git
 
+  # Download the last revision:
   $ git export git@github.com:crguezl/sinatra-up-and-running.git
 
+  # Download a specific revision:
   $ git export -r e2a5280 git@github.com:crguezl/sinatra-up-and-running.git
 
+  # Use verbose mode and download a specific revision of directory 'chapter1'.
+  # Its contents are left in the current directory:
+  $ git export -v -r e2a5280 git\@github.com:crguezl/sinatra-up-and-running.git/chapter1
+
+  # Use verbose mode and download a specific file into the current directory:
+  git export -v -r e2a5280 git\@github.com:crguezl/sinatra-up-and-running.git/chapter1/rockpaperscissors/Rakefile
+
+  # get help on export
   $ git help export
 
 =head1 AUTHOR
 
-Casiano Rodriguez-Leon, E<lt>casiano@ull.es<gt>
+Casiano Rodriguez-Leon, E<lt>casiano@ull.esE<gt>
 
 =head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2012 by casiano
+Copyright (C) 2012 by Casiano Rodriguez-Leon
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.3 or,
