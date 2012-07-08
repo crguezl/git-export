@@ -2,11 +2,36 @@
 use warnings;
 use strict;
 use Git::Export;
+use Getopt::Long;
 
-git_export(@ARGV);
+use File::Basename;
+use File::Path qw{remove_tree};
+
+our $VERSION = '0.02';
+
+my $revision = '';
+Getopt::Long::Configure('no_ignore_case');
+my $result = GetOptions('revision=s', \$revision,);
+
+  my $url = pop or die("Usage:\n  $0 repository\n");
+  my $basename = basename($url, '.git');
+  die "Directory $basename already exists. Remove it first" if -d  $basename;
+
+  my $outclone = `git clone @_ $url 2>&1`;
+  die "Errors while cloning $url: $!" if $?;
+
+  die "Can't create directory $basename" unless -d  $basename;
+  chdir($basename) or die "Can't change to dir $basename";
+
+  if ($revision) {
+    my $outcheckout  =  `git checkout $revision 2>&1`;
+    die "Errors while checking out revision  $revision: $!" if $?;
+  }
+
+  remove_tree('.git') or die "Can't remove .git directory";
+
 
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
@@ -18,6 +43,9 @@ git-export - git equivalent to 'svn export'
 
   $ git export git@github.com:crguezl/sinatra-up-and-running.git
 
+  $ git export -r e2a5280 git@github.com:crguezl/sinatra-up-and-running.git
+
+  $ git help export
 
 =head1 AUTHOR
 

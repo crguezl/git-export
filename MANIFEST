@@ -4,4 +4,3 @@ MANIFEST
 README
 t/Git-Export.t
 bin/git-export
-lib/Git/Export.pm

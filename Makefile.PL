@@ -6,7 +6,7 @@ my @exe_files = qw{bin/git-export};
 
 WriteMakefile(
     NAME              => 'Git::Export',
-    VERSION_FROM      => 'lib/Git/Export.pm', # finds $VERSION
+    VERSION_FROM      => 'bin/git-export', # finds $VERSION
     PREREQ_PM         => {}, # e.g., Module::Name => 1.1
     'EXE_FILES'    => \@exe_files,
     ABSTRACT       => "git equivalent to 'svn export'",

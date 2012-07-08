@@ -20,7 +20,6 @@ our @EXPORT = qw(
 	git_export
 );
 
-our $VERSION = '0.01';
 
 
 # Preloaded methods go here.
@@ -29,10 +28,10 @@ use File::Basename;
 use File::Path qw{remove_tree};
 
 sub git_export {
-  my $url = shift or die "Usage:\n  $0 repository\n";
+  my $url = pop or die "Usage:\n  $0 repository\n";
   my $basename = basename($url, '.git');
   die "Directory $basename already exists. Remove it first" if -d  $basename;
-  my $out = `git clone --depth 1 $url 2>&1`;
+  my $out = `git clone @_ --depth 1 $url 2>&1`;
   die "Errors while cloning $url: $!" if $?;
   die "Can't create directory $basename" unless -d  $basename;
   chdir($basename) or die "Can't change to dir $basename";
