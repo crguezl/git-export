@@ -7,7 +7,22 @@ SYNOPSIS
 
   $ git-export git@github.com:crguezl/sinatra-up-and-running.git
 
+  # Download the last revision:
   $ git export git@github.com:crguezl/sinatra-up-and-running.git
+
+  # Download a specific revision:
+  $ git export -r e2a5280 git@github.com:crguezl/sinatra-up-and-running.git
+
+  # Use verbose mode and download a specific revision of directory 'chapter1'.
+  # Its contents are left in the current directory:
+  $ git export -v -r e2a5280 git\@github.com:crguezl/sinatra-up-and-running.git/chapter1
+
+  # Use verbose mode and download a specific file into the current directory:
+  git export -v -r e2a5280 git\@github.com:crguezl/sinatra-up-and-running.git/chapter1/rockpaperscissors/Rakefile
+
+  # get help on export
+  $ git help export
+
 
 
 INSTALLATION
