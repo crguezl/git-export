@@ -6,9 +6,9 @@ use Getopt::Long;
 use File::Basename;
 use File::Path qw{remove_tree};
 use Cwd;
-use File::Copy::Recursive qw{rmove}; 
+use File::Copy::Recursive qw(rmove); 
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my $revision = '';
 my $VERBOSE  = 0;
@@ -74,6 +74,12 @@ git-export - git equivalent to 'svn export'
 
   # get help on export
   $ git help export
+
+=head1 INSTALL
+
+You need Perl installed, of course.
+
+  sudo cpan Git-Export
 
 =head1 AUTHOR
 
